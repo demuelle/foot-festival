@@ -13,10 +13,11 @@ const FILES_TO_CACHE = [
 ];
 
 const APP_PREFIX = "FoodFest-";
-const VERSION = "version_01";
+const VERSION = "version_02";
 const CACHE_NAME = APP_PREFIX + VERSION;
 
 self.addEventListener("install", function (e) {
+  console.log("install before");
   e.waitUntil(
     caches.open(CACHE_NAME).then(function (cache) {
       console.log("installing cache : " + CACHE_NAME);
@@ -25,7 +26,9 @@ self.addEventListener("install", function (e) {
   );
 });
 
+console.log("WHYYYYYYYY");
 self.addEventListener("activate", function (e) {
+  console.log("activate before");
   e.waitUntil(
     caches.keys().then(function (keyList) {
       let cacheKeeplist = keyList.filter(function (key) {
@@ -48,13 +51,13 @@ self.addEventListener("fetch", function (e) {
   console.log("fetch request : " + e.request.url);
   e.respondWith(
     caches.match(e.request).then(function (request) {
-        // return request || fetch(e.request)
+      // return request || fetch(e.request)
       if (request) {
         console.log("responding with cache : " + e.request.url);
         return request;
       } else {
-          console.log('file is not cached, fetching : ' + e.request.url);
-          return fetch(e.request);
+        console.log("file is not cached, fetching : " + e.request.url);
+        return fetch(e.request);
       }
     })
   );
